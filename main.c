@@ -1,8 +1,8 @@
 #include "DEV_Config.h"
 #include "AMOLED_1in64.h"
 #include "qspi_pio.h"
-//#include "QMI8658.h"
-//#include "FT3168.h"
+#include "QMI8658.h"
+#include "FT3168.h"
 //#include "image.h"
 #include "GUI_Paint.h"
 
