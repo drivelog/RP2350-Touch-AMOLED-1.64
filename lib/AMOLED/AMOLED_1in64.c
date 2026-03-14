@@ -159,7 +159,7 @@ void AMOLED_1IN64_SetBrightness(uint8_t brightness){
     if(brightness > 100) brightness = 100;
     brightness = brightness * 255 / 100;
 
-    // QSPI_1Wrie_Mode(&qspi);
+    // QSPI_1Wire_Mode(&qspi);
     QSPI_Select(qspi); 
     QSPI_REGISTER_Write(qspi, 0x51);
     QSPI_DATA_Write(qspi, brightness);
@@ -181,13 +181,13 @@ void AMOLED_1IN64_Clear(UWORD Color) {
 	UBYTE *partial_image = (UBYTE *)(image);
 
     // Send command in one-line mode
-    // QSPI_1Wrie_Mode(&qspi);
+    // QSPI_1Wire_Mode(&qspi);
     AMOLED_1IN64_SetWindows(0,0,AMOLED_1IN64.WIDTH,AMOLED_1IN64.HEIGHT);
     QSPI_Select(qspi);
     QSPI_Pixel_Write(qspi,0x2c);
 
     // Four-wire mode sends RGB data
-    // QSPI_4Wrie_Mode(&qspi);
+    // QSPI_4Wire_Mode(&qspi);
     channel_config_set_dreq(&c, pio_get_dreq(qspi.pio, qspi.sm, true));
     for (int i = 0; i < AMOLED_1IN64.HEIGHT; i++) {
         dma_channel_configure(dma_tx, 
@@ -213,13 +213,13 @@ parameter:
 void AMOLED_1IN64_Display(UWORD *Image)
 {
     // Send command in one-line mode
-    // QSPI_1Wrie_Mode(&qspi);
+    // QSPI_1Wire_Mode(&qspi);
     AMOLED_1IN64_SetWindows(0,0,AMOLED_1IN64.WIDTH,AMOLED_1IN64.HEIGHT);
     QSPI_Select(qspi);
     QSPI_Pixel_Write(qspi,0x2c);
 
     // Four-wire mode sends RGB data
-    // QSPI_4Wrie_Mode(&qspi);
+    // QSPI_4Wire_Mode(&qspi);
     channel_config_set_dreq(&c, pio_get_dreq(qspi.pio, qspi.sm, true));
     dma_channel_configure(dma_tx, 
                         &c,
@@ -244,13 +244,13 @@ parameter:
 ******************************************************************************/
 void AMOLED_1IN64_DisplayWindows(uint32_t Xstart, uint32_t Ystart, uint32_t Xend, uint32_t Yend, UWORD *Image) {
     // Send command in one-line mode
-    // QSPI_1Wrie_Mode(&qspi);
+    // QSPI_1Wire_Mode(&qspi);
     AMOLED_1IN64_SetWindows(Xstart, Ystart, Xend, Yend);
     QSPI_Select(qspi);
     QSPI_Pixel_Write(qspi, 0x2c);
 
     // Four-wire mode sends RGB data
-    // QSPI_4Wrie_Mode(&qspi);
+    // QSPI_4Wire_Mode(&qspi);
     channel_config_set_dreq(&c, pio_get_dreq(qspi.pio, qspi.sm, true));
 
     int i;

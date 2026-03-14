@@ -48,7 +48,7 @@ int main()
     /*QSPI PIO Init*/
     QSPI_GPIO_Init(qspi);
     QSPI_PIO_Init(qspi);
-    QSPI_4Wrie_Mode(&qspi);
+    QSPI_4Wire_Mode(&qspi);
 
     AMOLED_1IN64_Init();
     AMOLED_1IN64_SetBrightness(100);
