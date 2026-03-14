@@ -84,6 +84,13 @@ void Paint_SetRotate(uint16_t Rotate)
     if(Rotate == ROTATE_0 || Rotate == ROTATE_90 || Rotate == ROTATE_180 || Rotate == ROTATE_270) {
         Debug("Set image Rotate %d\r\n", Rotate);
         Paint.Rotate = Rotate;
+        if(Rotate == ROTATE_0 || Rotate == ROTATE_180) {
+            Paint.Width = Paint.WidthMemory;
+            Paint.Height = Paint.HeightMemory;
+        } else {
+            Paint.Width = Paint.HeightMemory;
+            Paint.Height = Paint.WidthMemory;
+        }
     } else {
         Debug("rotate = 0, 90, 180, 270\r\n");
     }
@@ -854,4 +861,3 @@ void Paint_DrawString_XL(uint16_t Xstart, uint16_t Ystart, const char * pString,
     }
 }
          
-
