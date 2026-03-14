@@ -102,7 +102,7 @@ function : QSPI PIO one-line mode, generally used to send commands
 parameter:
     qspi : QSPI structure
 ******************************************************************************/	
-void QSPI_1Wrie_Mode(pio_qspi_t *qspi){
+void QSPI_1Wire_Mode(pio_qspi_t *qspi){
     pio_sm_set_enabled(qspi->pio, qspi->sm_4wire, false);  
     pio_sm_set_enabled(qspi->pio, qspi->sm_1wire, true);  
     qspi->sm = qspi->sm_1wire;
@@ -113,7 +113,7 @@ function : QSPI PIO four-wire mode, generally used to send data
 parameter:
     qspi : QSPI structure
 ******************************************************************************/	
-void QSPI_4Wrie_Mode(pio_qspi_t *qspi){
+void QSPI_4Wire_Mode(pio_qspi_t *qspi){
     pio_sm_set_enabled(qspi->pio, qspi->sm_4wire, true); 
     pio_sm_set_enabled(qspi->pio, qspi->sm_1wire, false);   
     qspi->sm = qspi->sm_4wire;
