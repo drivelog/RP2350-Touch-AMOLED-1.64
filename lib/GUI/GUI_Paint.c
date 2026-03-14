@@ -862,49 +862,61 @@ void Paint_DrawString_XL(uint16_t Xstart, uint16_t Ystart, const char * pString,
 }
 
 
-void Paint_DrawChar_XL_Scaled(uint16_t Xstart, uint16_t Ystart, const char AsciiChar, uint16_t Color_Foreground, uint8_t scale)
+void Paint_DrawChar_XL_Scaled(uint16_t Xstart, uint16_t Ystart, const char AsciiChar, uint16_t Color_Foreground, float scale)
 {
     int char_index = (int)AsciiChar - FONT_XL_FIRST;
+    uint16_t dst_w;
+    uint16_t dst_h;
 
-    if (char_index < 0 || char_index >= FONT_XL_COUNT || scale == 0) {
+    if (char_index < 0 || char_index >= FONT_XL_COUNT || scale <= 0.0f) {
         return;
     }
 
-    for (uint16_t y = 0; y < FONT_XL_H; y++) {
-        for (uint16_t x = 0; x < FONT_XL_W; x++) {
-            uint8_t alpha = Font_XL_alpha[char_index][y][x];
+    dst_w = (uint16_t)(FONT_XL_W * scale);
+    dst_h = (uint16_t)(FONT_XL_H * scale);
+    if (dst_w == 0 || dst_h == 0) {
+        return;
+    }
 
+    for (uint16_t dy = 0; dy < dst_h; dy++) {
+        uint16_t src_y = (uint16_t)(dy / scale);
+        if (src_y >= FONT_XL_H) {
+            src_y = FONT_XL_H - 1;
+        }
+
+        for (uint16_t dx = 0; dx < dst_w; dx++) {
+            uint16_t src_x = (uint16_t)(dx / scale);
+            if (src_x >= FONT_XL_W) {
+                src_x = FONT_XL_W - 1;
+            }
+
+            uint8_t alpha = Font_XL_alpha[char_index][src_y][src_x];
             if (alpha > 0) {
                 uint16_t pixel = (alpha == 255)
                     ? Color_Foreground
                     : scale_rgb565(Color_Foreground, alpha);
-
-                uint16_t base_x = Xstart + x * scale;
-                uint16_t base_y = Ystart + y * scale;
-
-                for (uint8_t yy = 0; yy < scale; yy++) {
-                    for (uint8_t xx = 0; xx < scale; xx++) {
-                        Paint_SetPixel(base_x + xx, base_y + yy, pixel);
-                    }
-                }
+                Paint_SetPixel(Xstart + dx, Ystart + dy, pixel);
             }
         }
     }
 }
 
-void Paint_DrawString_XL_Scaled(uint16_t Xstart, uint16_t Ystart, const char * pString, uint16_t Color_Foreground, uint8_t scale)
+void Paint_DrawString_XL_Scaled(uint16_t Xstart, uint16_t Ystart, const char * pString, uint16_t Color_Foreground, float scale)
 {
     uint16_t char_w;
     uint16_t char_h;
     uint16_t Xpoint = Xstart;
     uint16_t Ypoint = Ystart;
 
-    if (scale == 0) {
+    if (scale <= 0.0f) {
         return;
     }
 
-    char_w = FONT_XL_W * scale;
-    char_h = FONT_XL_H * scale;
+    char_w = (uint16_t)(FONT_XL_W * scale);
+    char_h = (uint16_t)(FONT_XL_H * scale);
+    if (char_w == 0 || char_h == 0) {
+        return;
+    }
 
     if (Xstart > Paint.Width || Ystart > Paint.Height) {
         Debug("Paint_DrawString_XL_Scaled Input exceeds the normal display range\r\n");
