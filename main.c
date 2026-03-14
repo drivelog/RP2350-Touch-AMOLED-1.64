@@ -77,7 +77,7 @@ int main()
     /*5.Display Pi with Font_XL*/
     Paint_Clear(BLACK);
     Paint_SetRotate(ROTATE_270);
-    Paint_DrawString_XL(10, 10, "3.141593", CYAN);
+    Paint_DrawString_XL_Scaled(10, 10, "3.141593", CYAN, 1.5f);
     AMOLED_1IN64_Display(BlackImage);
     DEV_Delay_ms(2000);
 #endif
