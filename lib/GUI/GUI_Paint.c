@@ -84,6 +84,13 @@ void Paint_SetRotate(uint16_t Rotate)
     if(Rotate == ROTATE_0 || Rotate == ROTATE_90 || Rotate == ROTATE_180 || Rotate == ROTATE_270) {
         Debug("Set image Rotate %d\r\n", Rotate);
         Paint.Rotate = Rotate;
+        if(Rotate == ROTATE_0 || Rotate == ROTATE_180) {
+            Paint.Width = Paint.WidthMemory;
+            Paint.Height = Paint.HeightMemory;
+        } else {
+            Paint.Width = Paint.HeightMemory;
+            Paint.Height = Paint.WidthMemory;
+        }
     } else {
         Debug("rotate = 0, 90, 180, 270\r\n");
     }
@@ -853,5 +860,71 @@ void Paint_DrawString_XL(uint16_t Xstart, uint16_t Ystart, const char * pString,
         pString++;
     }
 }
-         
+
+
+void Paint_DrawChar_XL_Scaled(uint16_t Xstart, uint16_t Ystart, const char AsciiChar, uint16_t Color_Foreground, uint8_t scale)
+{
+    int char_index = (int)AsciiChar - FONT_XL_FIRST;
+
+    if (char_index < 0 || char_index >= FONT_XL_COUNT || scale == 0) {
+        return;
+    }
+
+    for (uint16_t y = 0; y < FONT_XL_H; y++) {
+        for (uint16_t x = 0; x < FONT_XL_W; x++) {
+            uint8_t alpha = Font_XL_alpha[char_index][y][x];
+
+            if (alpha > 0) {
+                uint16_t pixel = (alpha == 255)
+                    ? Color_Foreground
+                    : scale_rgb565(Color_Foreground, alpha);
+
+                uint16_t base_x = Xstart + x * scale;
+                uint16_t base_y = Ystart + y * scale;
+
+                for (uint8_t yy = 0; yy < scale; yy++) {
+                    for (uint8_t xx = 0; xx < scale; xx++) {
+                        Paint_SetPixel(base_x + xx, base_y + yy, pixel);
+                    }
+                }
+            }
+        }
+    }
+}
+
+void Paint_DrawString_XL_Scaled(uint16_t Xstart, uint16_t Ystart, const char * pString, uint16_t Color_Foreground, uint8_t scale)
+{
+    uint16_t char_w;
+    uint16_t char_h;
+    uint16_t Xpoint = Xstart;
+    uint16_t Ypoint = Ystart;
+
+    if (scale == 0) {
+        return;
+    }
+
+    char_w = FONT_XL_W * scale;
+    char_h = FONT_XL_H * scale;
+
+    if (Xstart > Paint.Width || Ystart > Paint.Height) {
+        Debug("Paint_DrawString_XL_Scaled Input exceeds the normal display range\r\n");
+        return;
+    }
+
+    while (* pString != '\0') {
+        if ((Xpoint + char_w) > Paint.Width) {
+            Xpoint = Xstart;
+            Ypoint += char_h;
+        }
+
+        if ((Ypoint + char_h) > Paint.Height) {
+            Xpoint = Xstart;
+            Ypoint = Ystart;
+        }
+
+        Paint_DrawChar_XL_Scaled(Xpoint, Ypoint, *pString, Color_Foreground, scale);
+        Xpoint += char_w;
+        pString++;
+    }
+}
 

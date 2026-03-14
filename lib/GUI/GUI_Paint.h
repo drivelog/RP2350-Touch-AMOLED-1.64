@@ -143,6 +143,8 @@ void Paint_DrawTime(uint16_t Xstart, uint16_t Ystart, PAINT_TIME *pTime, sFONT* 
 // Font_XL larger font display with alpha values
 void Paint_DrawChar_XL(uint16_t Xstart, uint16_t Ystart, const char AsciiChar, uint16_t Color_Foreground);
 void Paint_DrawString_XL(uint16_t Xstart, uint16_t Ystart, const char * pString, uint16_t Color_Foreground);
+void Paint_DrawChar_XL_Scaled(uint16_t Xstart, uint16_t Ystart, const char AsciiChar, uint16_t Color_Foreground, uint8_t scale);
+void Paint_DrawString_XL_Scaled(uint16_t Xstart, uint16_t Ystart, const char * pString, uint16_t Color_Foreground, uint8_t scale);
 
 //pic
 void Paint_DrawBitMap(const unsigned char* image_buffer);
