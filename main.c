@@ -3,7 +3,6 @@
 #include "qspi_pio.h"
 #include "QMI8658.h"
 #include "FT3168.h"
-//#include "image.h"
 #include "GUI_Paint.h"
 
 unsigned char const *PIC;
